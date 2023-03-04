@@ -1,7 +1,8 @@
 import { FC, useRef, useState } from "react";
 import { IoChevronDownSharp } from "react-icons/io5";
 import OutsideClick from "./OutsideClick";
-import { CSSTransition } from "react-transition-group";
+import { motion } from "framer-motion";
+import { dropdownMenuAnimate } from "~/utils/animations";
 
 type DropdownOption = {
   label: string;
@@ -80,38 +81,33 @@ const Dropdown: FC<{
         </button>
 
         {/* Dropdown menu */}
-        <CSSTransition
-          in={open}
-          timeout={100}
-          classNames="slide-down"
-          unmountOnExit
-          nodeRef={nodeRef}
+        <motion.div
+          animate={open ? "enter" : "exit"}
+          variants={dropdownMenuAnimate}
+          initial={false}
+          className={`absolute top-[100%] z-10 mt-[6px] text-gray-700 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm overflow-hidden ${positionClasses[alignment]} ${menuClasses}`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          ref={nodeRef}
         >
-          <div
-            className={`slide-down absolute top-[100%] z-10 mt-[6px] text-gray-700 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm overflow-hidden ${positionClasses[alignment]} ${menuClasses}`}
-            role="menu"
-            aria-orientation="vertical"
-            aria-labelledby="menu-button"
-            ref={nodeRef}
-          >
-            <div role="none">
-              {options?.length
-                ? options.map((option) => (
-                    <a
-                      key={option.value}
-                      href={option.href || "#"}
-                      className="first:pt-[10px] last:pb-[10px] block px-4 py-2 hover:bg-gray-50 transition-colors"
-                      role="menuitem"
-                      id="menu-item-0"
-                      onClick={() => handleClick(option)}
-                    >
-                      {option.label}
-                    </a>
-                  ))
-                : children}
-            </div>
+          <div role="none">
+            {options?.length
+              ? options.map((option) => (
+                  <a
+                    key={option.value}
+                    href={option.href || "#"}
+                    className="first:pt-[10px] last:pb-[10px] block px-4 py-2 hover:bg-gray-50 transition-colors"
+                    role="menuitem"
+                    id="menu-item-0"
+                    onClick={() => handleClick(option)}
+                  >
+                    {option.label}
+                  </a>
+                ))
+              : children}
           </div>
-        </CSSTransition>
+        </motion.div>
       </div>
     </OutsideClick>
   );

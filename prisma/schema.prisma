@@ -40,12 +40,12 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  birthDate     DateTime? @map("date_birth")
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
+  birthDate     DateTime? @map("date_birth")
 
   @@map("users")
 }

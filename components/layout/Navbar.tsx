@@ -1,18 +1,19 @@
-import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import Image from "next/image";
+import Link from 'next/link'
+import Image from 'next/image'
+import { signOut, useSession } from 'next-auth/react'
+
 import {
   IoPersonCircleOutline,
   IoLogOutOutline,
   IoSunnyOutline,
   IoMoonOutline,
-} from "react-icons/io5";
+} from 'react-icons/io5'
 
 const Navbar = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession()
 
   return (
-    <nav className="py-5 border-b border-gray-200  z-10 relative">
+    <nav className="py-5 border-b border-gray-200  z-10 relative bg-white">
       <div className="container flex items-center">
         <Link href="/">
           <Image
@@ -27,30 +28,38 @@ const Navbar = () => {
           <IoSunnyOutline className="text-xl cursor-pointer" />
           <IoMoonOutline className="text-xl cursor-pointer" />
 
-          {session ? (
+          {session?.user ? (
             <>
               {/* Account */}
-              <Link href="/account">
+              <Link href={`/account/${session.user.id}`}>
                 <button className="btn ">
                   Account
                   <Image
                     width={20}
                     height={20}
-                    src={session?.user?.image ?? ""}
+                    src={session?.user?.image ?? ''}
                     alt="avatar"
                     className="rounded-full ml-2"
                   />
                 </button>
               </Link>
+
               {/* Logout */}
-              <button onClick={() => signOut()} className="btn btn-green">
+              <button
+                className="btn btn-primary"
+                onClick={() =>
+                  signOut({
+                    callbackUrl: `/`,
+                  })
+                }
+              >
                 Log out
                 <IoLogOutOutline className="text-lg ml-1" />
               </button>
             </>
           ) : (
             <Link href="/api/auth/signin">
-              <button className="btn btn-green">
+              <button className="btn btn-primary">
                 Log in
                 <IoPersonCircleOutline className="text-lg ml-1" />
               </button>
@@ -59,7 +68,7 @@ const Navbar = () => {
         </ul>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

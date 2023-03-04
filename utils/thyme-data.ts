@@ -1,8 +1,3 @@
-export type IntervalOption = {
-  label: string;
-  value: string;
-};
-
 export const intervalOptions = [
   {
     label: "Weeks",
@@ -17,27 +12,6 @@ export const intervalOptions = [
     value: "years",
   },
 ];
-
-export type CalanderOptions = {
-  weeks: any[];
-  months: any[];
-  years: any[];
-};
-
-export type ThymeData = {
-  daysLived: number;
-  weeksLived: number;
-  monthsLived: number;
-  yearsLived: number;
-  daysToLive: number;
-  weeksToLive: number;
-  monthsToLive: number;
-  yearsToLive: number;
-  weeksLeft: number;
-  monthsLeft: number;
-  yearsLeft: number;
-  calanderItems: CalanderOptions;
-};
 
 export const initThymeData = (user: User): ThymeData => {
   const predictedYearsToLive = 90;
@@ -72,13 +46,8 @@ export const initThymeData = (user: User): ThymeData => {
   const yearsLeft =
     Math.round((yearsToLive - yearsLived + Number.EPSILON) * 100) / 100;
 
-  const calanderItems = {
-    weeks: mergelivedAndToLiveTime(weeksLived, weeksToLive),
-    months: mergelivedAndToLiveTime(monthsLived, monthsToLive),
-    years: mergelivedAndToLiveTime(yearsLived, yearsToLive),
-  };
-
   return {
+    predictedDeathDate,
     daysLived,
     weeksLived,
     monthsLived,
@@ -90,15 +59,26 @@ export const initThymeData = (user: User): ThymeData => {
     weeksLeft,
     monthsLeft,
     yearsLeft,
-    calanderItems,
+    getCalanderItems: (interval: string) => {
+      if (interval === "weeks")
+        return mergelivedAndToLiveTime(weeksLived, weeksToLive);
+      if (interval === "months")
+        return mergelivedAndToLiveTime(monthsLived, monthsToLive);
+      if (interval === "years")
+        return mergelivedAndToLiveTime(yearsLived, yearsToLive);
+      return [];
+    },
   };
 };
 
-const mergelivedAndToLiveTime = (amountLived: number, amountToLive: number) => {
-  const arr: any = [];
+export const mergelivedAndToLiveTime = (
+  amountLived: number,
+  amountToLive: number
+) => {
+  const arr: CalanderOption[] = [];
   for (let i = 0; i < amountToLive; i++) {
     const isLived = i + 1 < amountLived;
-    arr.push({ amountLived: i + 1, isLived });
+    arr.push({ value: i + 1, isLived });
   }
   return arr;
 };

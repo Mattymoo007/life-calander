@@ -1,17 +1,17 @@
-import Head from "next/head";
-import { createContext, FC } from "react";
-import Footer from "~/components/layout/Footer";
-import Navbar from "~/components/layout/Navbar";
+import Head from 'next/head'
+import { createContext, FC } from 'react'
+import Footer from '~/components/layout/Footer'
+import Navbar from '~/components/layout/Navbar'
 
 interface IUserContext {
-  user: User | null;
+  user: User | null
 }
 
-export const UserContext = createContext<IUserContext>({ user: null });
+export const UserContext = createContext<IUserContext>({ user: null })
 
 const userAppContext: IUserContext = {
   user: null,
-};
+}
 
 const DefaultLayout: FC<{ children: any }> = ({ children }) => {
   return (
@@ -24,14 +24,14 @@ const DefaultLayout: FC<{ children: any }> = ({ children }) => {
       </Head>
 
       <UserContext.Provider value={userAppContext}>
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-gray-50">
           <Navbar />
-          {children}
+          <main className="py-12 grow container">{children}</main>
           <Footer />
         </div>
       </UserContext.Provider>
     </>
-  );
-};
+  )
+}
 
-export default DefaultLayout;
+export default DefaultLayout

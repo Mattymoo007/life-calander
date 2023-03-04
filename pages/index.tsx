@@ -1,14 +1,16 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { getSession } from "next-auth/react";
+import { GetServerSideProps } from 'next'
+import { getSession } from 'next-auth/react'
 
 const Home = () => {
-  return <div>Home</div>;
-};
+  return <div>Home</div>
+}
 
-export default Home;
+export default Home
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession({ req })
+
+  console.log('session', session)
 
   if (session) {
     return {
@@ -16,10 +18,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         destination: `/my-thyme/${session.user?.id}`,
         permanent: false,
       },
-    };
+    }
   }
 
   return {
     props: {},
-  };
-};
+  }
+}
