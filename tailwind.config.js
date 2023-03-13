@@ -18,5 +18,12 @@ module.exports = {
       colors: colors,
     },
   },
+  safelist: [
+    {
+      pattern: new RegExp(
+        `^(bg|text|border)-(primary|secondary)/(20|30|40|50|60|70|80|90)`
+      ),
+    },
+  ],
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }

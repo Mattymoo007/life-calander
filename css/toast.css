@@ -1,0 +1,13 @@
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-success: theme('colors.primary');
+  --toastify-color-error: theme('colors.red.500');
+}
+
+.Toastify__toast {
+  @apply border-gray-200;
+}
+
+.Toastify__toast--success {
+  @apply border-primary/80 border-t-4;
+}

@@ -4,23 +4,27 @@ import { useState } from 'react'
 import Calander from '~/components/Calander'
 import ThymeAside from '~/components/ThymeAside'
 import { intervalOptions } from '~/utils/thyme-data'
-import { getUserById } from '~/utils/db'
+import { getThymeDataById, getUserById } from '~/utils/db'
 import { withAuth } from '~/utils/withAuth'
+import { ThymeData, User } from '@prisma/client'
 
-const MyThyme: NextPage<{ user: User }> = ({ user }) => {
+const MyThyme: NextPage<{ user: User; thymeData: ThymeData }> = ({
+  user,
+  thymeData,
+}) => {
   const [selectedInterval, setSelectedInterval] = useState(intervalOptions[1])
 
   return (
     <div className="flex flex-col">
-      {user && (
+      {thymeData && (
         <div className="container aside-layout">
           {/* Aside */}
-          <ThymeAside user={user} />
+          <ThymeAside thymeData={thymeData} />
 
           {/* Calander display */}
           <div className="">
             <div className="flex items-center justify-center mb-10">
-              <h2 className="font-medium spartan mr-3">
+              <h2 className="font-normal spartan mr-3">
                 Hi {user?.name?.split(' ')[0]}, your current{' '}
                 <span className="text-primary">thyme</span> in
               </h2>
@@ -33,7 +37,10 @@ const MyThyme: NextPage<{ user: User }> = ({ user }) => {
                 onChange={(value: any) => setSelectedInterval(value)}
               />
             </div>
-            <Calander user={user} selectedInterval={selectedInterval} />
+            <Calander
+              thymeData={thymeData}
+              selectedInterval={selectedInterval}
+            />
           </div>
         </div>
       )}
@@ -46,9 +53,10 @@ export default MyThyme
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return withAuth(ctx, async () => {
     const user = await getUserById(String(ctx.params?.id))
+    const thymeData = await getThymeDataById(String(ctx.params?.id))
 
     return {
-      props: { user: JSON.parse(JSON.stringify(user)) },
+      props: { user: JSON.parse(JSON.stringify(user)), thymeData },
     }
   })
 }

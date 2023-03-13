@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client'
 import prisma from '~/lib/prisma'
 
 // const getCourses = async () => {
@@ -88,6 +87,16 @@ const getUserById = async (id: string) => {
   return user
 }
 
+const getThymeDataById = async (id: string) => {
+  const thymeData = await prisma.thymeData.findUnique({
+    where: {
+      id: String(id),
+    },
+  })
+
+  return thymeData
+}
+
 const updateUser = async (id: string, data: any) => {
   const user = await prisma.user.update({
     where: {
@@ -156,6 +165,7 @@ export {
   createUser,
   updateUser,
   getUserById,
+  getThymeDataById,
   //   getUserByEmail,
   //   enrolUser,
   //   subscribeUser,

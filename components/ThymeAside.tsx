@@ -1,10 +1,13 @@
-import { initThymeData } from "~/utils/thyme-data";
-import { FC } from "react";
-import AsideCard from "./AsideCard";
+import { initThymeData } from '~/utils/thyme-data'
+import { FC } from 'react'
+import AsideCard from './AsideCard'
+import { ThymeData } from '@prisma/client'
 
-const ThymeAside: FC<{ user: User }> = ({ user }) => {
-  const thymeData: ThymeData = initThymeData(user);
+const ThymeAside: FC<{ thymeData: ThymeData }> = ({ thymeData }) => {
+  const _thymeData = initThymeData(thymeData)
+
   const {
+    predictedDeathDate,
     monthsLeft,
     monthsLived,
     monthsToLive,
@@ -14,21 +17,23 @@ const ThymeAside: FC<{ user: User }> = ({ user }) => {
     weeksLeft,
     weeksLived,
     weeksToLive,
-  } = thymeData;
+  } = _thymeData
 
   const getPercentageLived = (total: number, lived: number) => {
-    return (lived / total) * 100;
-  };
+    return (lived / total) * 100
+  }
 
-  const percentageLived = getPercentageLived(weeksToLive, weeksLived);
+  const percentageLived = getPercentageLived(weeksToLive, weeksLived)
+  const formattedDate = predictedDeathDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 
   return (
     <div className="flex flex-col gap-4">
-      <AsideCard
-        color="secondary"
-        percentage={percentageLived}
-        label="Estimated departure date:"
-      />
+      <AsideCard percentage={percentageLived} label="Percentage lived:" />
       <AsideCard
         timeLeft={weeksLeft}
         timeLived={weeksLived}
@@ -47,9 +52,13 @@ const ThymeAside: FC<{ user: User }> = ({ user }) => {
         timeTotal={yearsToLive}
         interval="Years"
       />
-      <AsideCard percentage={percentageLived} label="Percentage lived:" />
+      <AsideCard
+        color="secondary"
+        label="Expected date of departure:"
+        text={formattedDate}
+      />
     </div>
-  );
-};
+  )
+}
 
-export default ThymeAside;
+export default ThymeAside

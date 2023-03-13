@@ -8,12 +8,25 @@ import {
   IoSunnyOutline,
   IoMoonOutline,
 } from 'react-icons/io5'
+import { useEffect, useState } from 'react'
+import { initTheme, setTheme } from '~/utils/theme'
 
 const Navbar = () => {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    initTheme(setIsDark)
+  }, [])
+
+  const [isDark, setIsDark] = useState(false)
+
+  const toggleTheme = () => {
+    setIsDark(!isDark)
+    setTheme(isDark ? 'light' : 'dark')
+  }
 
   return (
-    <nav className="py-5 border-b border-gray-200  z-10 relative bg-white">
+    <nav className="py-5 border-b border-gray-200  z-10 relative bg-white dark:bg-gray-800">
       <div className="container flex items-center">
         <Link href="/">
           <Image
@@ -25,8 +38,17 @@ const Navbar = () => {
         </Link>
         <div className="flex-grow" />
         <ul className="flex items-center gap-3">
-          <IoSunnyOutline className="text-xl cursor-pointer" />
-          <IoMoonOutline className="text-xl cursor-pointer" />
+          {/* {isDark ? (
+            <IoMoonOutline
+              className="text-xl cursor-pointer"
+              onClick={toggleTheme}
+            />
+          ) : (
+            <IoSunnyOutline
+              className="text-xl cursor-pointer"
+              onClick={toggleTheme}
+            />
+          )} */}
 
           {session?.user ? (
             <>

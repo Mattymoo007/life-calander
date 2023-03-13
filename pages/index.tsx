@@ -1,16 +1,21 @@
+import dayjs from 'dayjs'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 
 const Home = () => {
-  return <div>Home</div>
+  const b = dayjs().add(-30, 'year').format('YYYY-MM-DD')
+
+  return (
+    <div>
+      Home <span>{b}</span>
+    </div>
+  )
 }
 
 export default Home
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req })
-
-  console.log('session', session)
 
   if (session) {
     return {

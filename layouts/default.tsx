@@ -1,17 +1,7 @@
 import Head from 'next/head'
-import { createContext, FC } from 'react'
+import { FC } from 'react'
 import Footer from '~/components/layout/Footer'
 import Navbar from '~/components/layout/Navbar'
-
-interface IUserContext {
-  user: User | null
-}
-
-export const UserContext = createContext<IUserContext>({ user: null })
-
-const userAppContext: IUserContext = {
-  user: null,
-}
 
 const DefaultLayout: FC<{ children: any }> = ({ children }) => {
   return (
@@ -23,13 +13,11 @@ const DefaultLayout: FC<{ children: any }> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <UserContext.Provider value={userAppContext}>
-        <div className="flex flex-col min-h-screen bg-gray-50">
-          <Navbar />
-          <main className="py-12 grow container">{children}</main>
-          <Footer />
-        </div>
-      </UserContext.Provider>
+      <div className="flex flex-col min-h-screen bg-gray-50">
+        <Navbar />
+        <main className="py-12 grow container">{children}</main>
+        <Footer />
+      </div>
     </>
   )
 }
