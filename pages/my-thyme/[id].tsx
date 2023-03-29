@@ -1,12 +1,13 @@
 import type { GetServerSideProps, NextPage } from 'next'
-import Dropdown from '~/components/Dropdown'
+import Dropdown from '~/components/ui/Dropdown'
 import { useState } from 'react'
 import Calander from '~/components/Calander'
 import ThymeAside from '~/components/ThymeAside'
 import { intervalOptions } from '~/utils/thyme-data'
-import { getThymeDataById, getUserById } from '~/utils/db'
+import { getThymeDataByUserId, getUserById } from '~/utils/db'
 import { withAuth } from '~/utils/withAuth'
 import { ThymeData, User } from '@prisma/client'
+import { serialise } from '~/utils/serialise-response'
 
 const MyThyme: NextPage<{ user: User; thymeData: ThymeData }> = ({
   user,
@@ -52,11 +53,12 @@ export default MyThyme
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return withAuth(ctx, async () => {
-    const user = await getUserById(String(ctx.params?.id))
-    const thymeData = await getThymeDataById(String(ctx.params?.id))
+    const userId = String(ctx.params?.id)
+    const user = await getUserById(userId)
+    const thymeData = await getThymeDataByUserId(userId)
 
     return {
-      props: { user: JSON.parse(JSON.stringify(user)), thymeData },
+      props: { user: serialise(user), thymeData: serialise(thymeData) },
     }
   })
 }

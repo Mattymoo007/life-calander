@@ -1,8 +1,11 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import { Stripe, loadStripe } from '@stripe/stripe-js'
 
-const createCustomer = async (email: string) =>
-  stripe.customers.create({
-    email,
-  });
+let stripePromise: Promise<Stripe | null>
+const getStripe = () => {
+  if (!stripePromise) {
+    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+  }
+  return stripePromise
+}
 
-export { createCustomer };
+export default getStripe

@@ -46,14 +46,14 @@ model User {
   accounts      Account[]
   sessions      Session[]
   stripeId      String?     @unique
-  thymeData     ThymeData[]
+  thymeData     ThymeData?
 
   @@map("users")
 }
 
 model ThymeData {
   id         String   @id @default(cuid())
-  userId     String   @map("user_id")
+  userId     String   @unique @map("user_id")
   totalTime  Int      @default(90)
   birthDate  DateTime @default(now())
   hasPremium Boolean  @default(false)

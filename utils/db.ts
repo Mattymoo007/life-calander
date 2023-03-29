@@ -1,15 +1,20 @@
 import prisma from '~/lib/prisma'
 
-// const getCourses = async () => {
-//   const prisma = new PrismaClient()
-//   const courses = await prisma.course.findMany({
-//     include: {
-//       lessons: true,
-//     },
-//   })
-//   await prisma.$disconnect()
-//   return courses
-// }
+const updateUserPremium = async (stripeId: string, hasPremium?: boolean) => {
+  const user = await prisma.user.update({
+    where: {
+      stripeId,
+    },
+    data: {
+      thymeData: {
+        update: {
+          hasPremium: hasPremium,
+        },
+      },
+    },
+  })
+  return user
+}
 
 // const getCourseBySlug = async (slug) => {
 //   const prisma = new PrismaClient()
@@ -87,13 +92,12 @@ const getUserById = async (id: string) => {
   return user
 }
 
-const getThymeDataById = async (id: string) => {
+const getThymeDataByUserId = async (id: string) => {
   const thymeData = await prisma.thymeData.findUnique({
     where: {
-      id: String(id),
+      userId: String(id),
     },
   })
-
   return thymeData
 }
 
@@ -105,6 +109,16 @@ const updateUser = async (id: string, data: any) => {
     data,
   })
   return user
+}
+
+const updateThyme = async (id: string, data: any) => {
+  const thymeData = await prisma.thymeData.update({
+    where: {
+      userId: String(id),
+    },
+    data,
+  })
+  return thymeData
 }
 
 // const enrolUser = async (userId, courseId) => {
@@ -164,8 +178,10 @@ export {
   //   getLessonBySlug,
   createUser,
   updateUser,
+  updateThyme,
   getUserById,
-  getThymeDataById,
+  getThymeDataByUserId,
+  updateUserPremium,
   //   getUserByEmail,
   //   enrolUser,
   //   subscribeUser,

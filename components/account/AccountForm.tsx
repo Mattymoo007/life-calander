@@ -10,8 +10,8 @@ const AccountForm: FC<{ user: User; thymeData: ThymeData }> = ({
   thymeData,
 }) => {
   const birthDate = {
-    startDate: thymeData.birthDate ? new Date(thymeData.birthDate) : null,
-    endDate: thymeData.birthDate ? new Date(thymeData.birthDate) : null,
+    startDate: thymeData?.birthDate ? new Date(thymeData.birthDate) : null,
+    endDate: thymeData?.birthDate ? new Date(thymeData.birthDate) : null,
   }
 
   const [formData, setFormData] = useState<AnyObject>({
@@ -46,8 +46,6 @@ const AccountForm: FC<{ user: User; thymeData: ThymeData }> = ({
     setErrors([])
     let errors: string[] = []
 
-    console.log(formData)
-
     for (const key in formData) {
       if (!formData[key] || formData[key].startDate === null) {
         const keyName = key
@@ -69,7 +67,7 @@ const AccountForm: FC<{ user: User; thymeData: ThymeData }> = ({
 
     if (!isValidated) return
 
-    const data = {
+    const data: Partial<User & ThymeData> = {
       ...formData,
       birthDate: formData.birthDate.startDate,
     }
@@ -82,15 +80,14 @@ const AccountForm: FC<{ user: User; thymeData: ThymeData }> = ({
       body: JSON.stringify(data),
     }).catch((err) => err)
 
-    if (res.status === 200) {
+    if (res.status === 200)
       toast.success('Account update!', {
         icon: toastIcon.success,
       })
-    } else {
+    else
       toast.error('Something went wrong!', {
         icon: toastIcon.error,
       })
-    }
   }
 
   return (

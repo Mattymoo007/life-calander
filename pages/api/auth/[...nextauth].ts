@@ -18,21 +18,18 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
     }),
   ],
+
   adapter: PrismaAdapter(prisma),
+
   secret: process.env.SECRET,
+
   callbacks: {
-    session: async ({ session, user }) => {
+    session: async ({ session, token, user }) => {
       if (session?.user) session.user.id = user.id
       return session
     },
-    jwt: async ({ user, token }) => {
-      if (user) token.uid = user.id
-      return token
-    },
   },
-  session: {
-    strategy: 'jwt',
-  },
+
   events: {
     createUser: async ({ user }) => {
       // Get stripe id and save in user
@@ -53,10 +50,12 @@ export const authOptions: AuthOptions = {
           })
         })
 
+      const birthDate = dayjs().add(-30, 'year').format('YYYY-MM-DD')
+
       // Create default thyme data
       const defaultThymeData = {
         totalTime: 90,
-        birthDate: dayjs().add(-30, 'year').format('YYYY-MM-DD'),
+        birthDate: new Date(birthDate),
         userId: user.id,
         hasPremium: false,
       }
