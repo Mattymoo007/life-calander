@@ -39,6 +39,7 @@ export const authOptions: AuthOptions = {
 
       await stripe.customers
         .create({
+          name: user.name!,
           email: user.email!,
         })
         .then(async (customer) => {

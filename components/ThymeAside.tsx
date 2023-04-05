@@ -8,6 +8,9 @@ const ThymeAside: FC<{ thymeData: ThymeData }> = ({ thymeData }) => {
 
   const {
     predictedDeathDate,
+    daysLeft,
+    daysLived,
+    daysToLive,
     monthsLeft,
     monthsLived,
     monthsToLive,
@@ -23,22 +26,17 @@ const ThymeAside: FC<{ thymeData: ThymeData }> = ({ thymeData }) => {
     return (lived / total) * 100
   }
 
-  const percentageLived = getPercentageLived(weeksToLive, weeksLived)
-  const formattedDate = predictedDeathDate.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+  const percentageLived = getPercentageLived(daysToLive, daysLived)
+  const formattedDate = predictedDeathDate.format('DD MMMM YYYY')
 
   return (
     <div className="flex flex-col gap-4">
       <AsideCard percentage={percentageLived} label="Percentage lived:" />
       <AsideCard
-        timeLeft={weeksLeft}
-        timeLived={weeksLived}
-        timeTotal={weeksToLive}
-        interval="Weeks"
+        timeLeft={yearsLeft}
+        timeLived={yearsLived}
+        timeTotal={yearsToLive}
+        interval="Years"
       />
       <AsideCard
         timeLeft={monthsLeft}
@@ -47,11 +45,12 @@ const ThymeAside: FC<{ thymeData: ThymeData }> = ({ thymeData }) => {
         interval="Months"
       />
       <AsideCard
-        timeLeft={yearsLeft}
-        timeLived={yearsLived}
-        timeTotal={yearsToLive}
-        interval="Years"
+        timeLeft={weeksLeft}
+        timeLived={weeksLived}
+        timeTotal={weeksToLive}
+        interval="Weeks"
       />
+
       <AsideCard
         color="secondary"
         label="Expected date of departure:"

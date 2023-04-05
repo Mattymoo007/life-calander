@@ -1,3 +1,4 @@
+import { User } from '@prisma/client'
 import Image from 'next/image'
 import { FC, MouseEventHandler, useState } from 'react'
 import { IoArrowUpCircleOutline } from 'react-icons/io5'
@@ -8,15 +9,18 @@ import Modal from './ui/Modal'
 const UpgradeModal: FC<{
   showModal: boolean
   setShowModal: Function
-  userId: string
-}> = ({ showModal, setShowModal, userId }) => {
+  user: User
+}> = ({ showModal, setShowModal, user }) => {
   const [loading, setLoading] = useState(false)
 
   const handleSubmit: MouseEventHandler = async (e) => {
     e.preventDefault()
     setLoading(true)
     const response = await fetchPostJSON('/api/checkout_sessions', {
-      userId: userId,
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      stripeId: user.stripeId,
       amount: 20,
     })
 
@@ -89,7 +93,7 @@ const UpgradeModal: FC<{
           className="btn btn-secondary btn-outline w-1/2 mt-8"
           onClick={(e) => handleSubmit(e)}
         >
-          Upgrade Now!
+          {loading ? 'Redirecting to checkout ...' : 'Upgrade Now!'}
         </button>
       </div>
     </Modal>

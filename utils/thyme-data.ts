@@ -1,4 +1,6 @@
 import { ThymeData } from '@prisma/client'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 export const intervalOptions = [
   {
@@ -15,38 +17,31 @@ export const intervalOptions = [
   },
 ]
 
+dayjs.extend(relativeTime)
+
 export const initThymeData = (thymeData: ThymeData) => {
-  const predictedYearsToLive = thymeData.totalTime ?? 90
-  const now = new Date()
-  const birthDate = new Date(thymeData?.birthDate ?? '')
+  const now = dayjs().toDate()
+  const birthDate = dayjs(thymeData.birthDate).toDate()
 
-  const predictedDeathDate = new Date(
-    now.getFullYear() + predictedYearsToLive,
-    now.getMonth(),
-    now.getDate()
+  const predictedDeathDate = dayjs(birthDate).add(
+    thymeData.totalTime ?? 90,
+    'years'
   )
 
-  const daysToLive = Math.round(
-    (predictedDeathDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-  )
-  const weeksToLive = Math.round((daysToLive / 7 + Number.EPSILON) * 100) / 100
-  const monthsToLive =
-    Math.round((daysToLive / 30 + Number.EPSILON) * 100) / 100
-  const yearsToLive =
-    Math.round((daysToLive / 365 + Number.EPSILON) * 100) / 100
+  const daysToLive = predictedDeathDate.diff(birthDate, 'days')
+  const weeksToLive = predictedDeathDate.diff(birthDate, 'weeks')
+  const monthsToLive = predictedDeathDate.diff(birthDate, 'months')
+  const yearsToLive = predictedDeathDate.diff(birthDate, 'years')
 
-  const daysLived =
-    (now.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24)
-  const weeksLived = Math.round((daysLived / 7 + Number.EPSILON) * 100) / 100
-  const monthsLived = Math.round((daysLived / 30 + Number.EPSILON) * 100) / 100
-  const yearsLived = Math.round((daysLived / 365 + Number.EPSILON) * 100) / 100
+  const daysLived = dayjs(now).diff(birthDate, 'days')
+  const weeksLived = dayjs(now).diff(birthDate, 'weeks')
+  const monthsLived = dayjs(now).diff(birthDate, 'months')
+  const yearsLived = dayjs(now).diff(birthDate, 'years')
 
-  const weeksLeft =
-    Math.round((weeksToLive - weeksLived + Number.EPSILON) * 100) / 100
-  const monthsLeft =
-    Math.round((monthsToLive - monthsLived + Number.EPSILON) * 100) / 100
-  const yearsLeft =
-    Math.round((yearsToLive - yearsLived + Number.EPSILON) * 100) / 100
+  const daysLeft = daysToLive - daysLived
+  const weeksLeft = weeksToLive - weeksLived
+  const monthsLeft = monthsToLive - monthsLived
+  const yearsLeft = yearsToLive - yearsLived
 
   return {
     predictedDeathDate,
@@ -58,6 +53,7 @@ export const initThymeData = (thymeData: ThymeData) => {
     weeksToLive,
     monthsToLive,
     yearsToLive,
+    daysLeft,
     weeksLeft,
     monthsLeft,
     yearsLeft,

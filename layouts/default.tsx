@@ -15,7 +15,7 @@ const DefaultLayout: FC<{ children: any }> = ({ children }) => {
 
       <div className="flex flex-col min-h-screen bg-gray-50">
         <Navbar />
-        <main className="py-12 grow container">{children}</main>
+        <main className="pt-12 grow">{children}</main>
         <Footer />
       </div>
     </>

@@ -40,12 +40,11 @@ export default async function checkoutsWebhooksHandler(
 
     // Cast event data to Stripe object.
     if (event.type === 'customer.subscription.deleted') {
-      updateUserPremium(customerId, false)
+      await updateUserPremium(customerId, false)
       console.log(`🔔 Customer ${customerId} cancelled their subscription.`)
     } else if (event.type === 'customer.subscription.updated') {
-      // update isPremium field for customer
-      const user = await updateUserPremium(customerId, true)
-      console.log(`🔔 Customer ${user.email} updated their subscription.`)
+      await updateUserPremium(customerId, true)
+      console.log(`🔔 Customer ${customerId} updated their subscription.`)
     }
 
     // Return a response to acknowledge receipt of the event.

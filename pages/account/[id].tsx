@@ -32,20 +32,32 @@ const Account: NextPage<{ user: User; thymeData: ThymeData }> = ({
               />
             </div>
             <ul className="flex flex-col">
-              <li className="p-3 border-b border-primary/40">{user?.name}</li>
-              <li className="p-3 ">{user?.email}</li>
+              <li className="p-4 border-b border-primary/40">{user?.name}</li>
+              <li className="p-4">{user?.email}</li>
             </ul>
           </div>
 
-          <div
-            className="card border-secondary bg-transparent p-3 flex items-center hover:bg-secondary/20 cursor-pointer"
-            onClick={() => setShowModal(true)}
-          >
-            <IoLeaf className="text-secondary text-xl mr-3" />
-            <p>Upgrade to Thyme premium!</p>
-            <div className="grow" />
-            <IoArrowForwardSharp className="text-secondary text-xl" />
-          </div>
+          {thymeData.hasPremium ? (
+            <div
+              className="card border-secondary bg-transparent p-4 flex flex-col items-center"
+              onClick={() => setShowModal(true)}
+            >
+              <IoLeaf className="text-secondary text-2xl mr-3 mb-3" />
+              <p>You are currently on Thyme Premium!</p>
+
+              <button className="btn w-full mt-5">Cancel subscription</button>
+            </div>
+          ) : (
+            <div
+              className="card border-secondary bg-transparent p-3 flex items-center hover:bg-secondary/20 cursor-pointer"
+              onClick={() => setShowModal(true)}
+            >
+              <IoLeaf className="text-secondary text-xl mr-3" />
+              <p>Upgrade to Thyme premium!</p>
+              <div className="grow" />
+              <IoArrowForwardSharp className="text-secondary text-xl" />
+            </div>
+          )}
         </aside>
 
         {/* Profile details */}
@@ -55,7 +67,7 @@ const Account: NextPage<{ user: User; thymeData: ThymeData }> = ({
       <UpgradeModal
         showModal={showModal}
         setShowModal={setShowModal}
-        userId={user.id}
+        user={user}
       />
     </div>
   )
