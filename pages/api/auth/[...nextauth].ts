@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
 
   adapter: PrismaAdapter(prisma),
 
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
     session: async ({ session, token, user }) => {
